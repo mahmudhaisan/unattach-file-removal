@@ -23,15 +23,25 @@ if (!defined('ABSPATH')) {
 
 function rmdb()
 {
-    global $wpdb;
 
+    // duplicate_posts();
+    duplicate_items_query();
+}
+
+
+
+
+
+
+function duplicate_posts()
+{
+
+    global $wpdb;
     $results = get_posts(array(
         'numberposts' => -1,
         'post_type' => 'attachment',
         'order' => "ASC"
     ));
-
-
 
     /**
      * duplicate one post in 4 time
@@ -55,5 +65,30 @@ function rmdb()
         print_r($db_insertation);
     }
 }
+
+
+
+
+function duplicate_items_query()
+{
+    global $wpdb;
+    $duplicate_items_count = $wpdb->get_results("SELECT guid,Count(*) FROM wp_posts GROUP BY guid HAVING count(*)>1");
+    $duplicate_items_value = $wpdb->get_results("SELECT DISTINCT (wp_posts.`post_title`) FROM wp_posts");
+
+    echo '<pre>';
+
+    // showing field value and its total count
+    // print_r($duplicate_items_count);
+
+    //showing duplicate items value
+    print_r($duplicate_items_value);
+
+    echo '</pre>';
+}
+
+
+
+
+
 
 add_shortcode('shortcode', 'rmdb');

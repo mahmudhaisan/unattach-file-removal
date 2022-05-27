@@ -20,18 +20,24 @@ if (!defined('ABSPATH')) {
     die;
 }
 
-
+/**
+ * Main Execution
+ */
 function rmdb()
 {
 
     // duplicate_posts();
     duplicate_items_query();
+    // delete_duplicate_items();
 }
 
 
 
 
 
+/**
+ * duplicate one post in 4 time
+ */
 
 function duplicate_posts()
 {
@@ -43,9 +49,7 @@ function duplicate_posts()
         'order' => "ASC"
     ));
 
-    /**
-     * duplicate one post in 4 time
-     */
+
     for ($i = 0; $i < 5; $i++) {
         for ($j = 0; $j < 4; $j++) {
             $post_name = $results[$i]->post_name;
@@ -69,6 +73,10 @@ function duplicate_posts()
 
 
 
+/**
+ * Check and count the duplicate wp_posts items
+ */
+
 function duplicate_items_query()
 {
     global $wpdb;
@@ -87,6 +95,16 @@ function duplicate_items_query()
 }
 
 
+
+/**
+ * delete duplicate items based on wp_posts guid
+ */
+
+function delete_duplicate_items()
+{
+    global $wpdb;
+    $wpdb->get_results('DELETE x1 from wp_posts x1 INNER JOIN wp_posts x2 where x1.ID<x2.ID AND x1.guid = x2.guid');
+}
 
 
 
